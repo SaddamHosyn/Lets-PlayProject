@@ -79,4 +79,38 @@ public class UserService {
     private UserResponse convertToResponse(User user) {
         return new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getRole());
     }
+
+
+
+
+
+
+
+
+
+// Add this method to UserService.java
+public boolean isCurrentUser(String userId, String currentUserEmail) {
+    try {
+        UserResponse user = getUserById(userId);
+        return user.getEmail().equals(currentUserEmail);
+    } catch (Exception e) {
+        return false;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
