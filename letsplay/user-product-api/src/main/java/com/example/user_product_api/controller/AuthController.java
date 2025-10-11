@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.annotation.security.PermitAll;
+
 import com.example.user_product_api.dto.LoginRequest;
 import com.example.user_product_api.dto.UserRegistrationRequest;
 import com.example.user_product_api.dto.UserResponse;
@@ -39,6 +41,7 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/login")
+    @PermitAll
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -63,9 +66,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @PermitAll
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationRequest signUpRequest) {
         Map<String, String> response = new HashMap<>();
-        
+
         try {
             UserResponse userResponse = userService.createUser(signUpRequest);
             response.put("message", "User registered successfully!");
@@ -84,6 +88,7 @@ public class AuthController {
     }
 
     @GetMapping("/test")
+    @PermitAll
     public ResponseEntity<?> testAuth() {
         Map<String, String> response = new HashMap<>();
         response.put("message", "Authentication endpoints are working!");

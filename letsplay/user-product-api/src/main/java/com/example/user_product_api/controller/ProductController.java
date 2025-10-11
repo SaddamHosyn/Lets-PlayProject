@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.annotation.security.PermitAll;
+
 import com.example.user_product_api.entity.Product;
 import com.example.user_product_api.security.UserDetailsImpl;
 import com.example.user_product_api.service.ProductService;
@@ -28,6 +30,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
+    @PermitAll
     public ResponseEntity<List<Product>> getAllProducts() {
         // This endpoint is PUBLIC as per requirements
         List<Product> products = productService.getAllProducts();
@@ -39,12 +42,13 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         product.setUserId(userDetails.getId());
-        
+
         Product savedProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
     @GetMapping("/{id}")
+    @PermitAll
     public ResponseEntity<Product> getProductById(@PathVariable String id) {
         // This endpoint is PUBLIC as per requirements
         Product product = productService.getProductById(id);
@@ -54,14 +58,14 @@ public class ProductController {
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Product> updateProduct(
-            @PathVariable String id, 
+            @PathVariable String id,
             @Valid @RequestBody Product productRequest,
             Authentication authentication) {
-        
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String currentUserId = userDetails.getId();
         String userRole = userDetails.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-        
+
         Product updatedProduct = productService.updateProduct(id, productRequest, currentUserId, userRole);
         return ResponseEntity.ok(updatedProduct);
     }
@@ -72,15 +76,16 @@ public class ProductController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String currentUserId = userDetails.getId();
         String userRole = userDetails.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-        
+
         productService.deleteProduct(id, currentUserId, userRole);
-        
+
         Map<String, String> response = new HashMap<>();
         response.put("message", "Product deleted successfully");
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
+    @PermitAll
     public ResponseEntity<List<Product>> searchProducts(@RequestParam String name) {
         // This endpoint is PUBLIC as per requirements
         List<Product> products = productService.searchProductsByName(name);
