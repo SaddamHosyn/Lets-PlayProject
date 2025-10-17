@@ -17,10 +17,11 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    // Use a hardcoded secret for now to avoid configuration issues
-    private String jwtSecret = "bXlTZWNyZXRLZXlGb3JKV1RBdXRoZW50aWNhdGlvbkFuZEF1dGhvcml6YXRpb25TcHJpbmdCb290";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
     
-    private int jwtExpirationMs = 86400000; // 24 hours
+    @Value("${jwt.expiration}")
+    private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
