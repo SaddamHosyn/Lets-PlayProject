@@ -7,6 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
+    //optional helps to avoid null pointer exceptions, which will avoid crash application.
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
 }
