@@ -12,12 +12,13 @@ import com.example.user_product_api.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDetailsImpl implements UserDetails {
+    // versioning of the class for serialization
     private static final long serialVersionUID = 1L;
 
     private String id;
     private String name;
     private String email;
-    
+    //response back without password
     @JsonIgnore
     private String password;
 
@@ -43,6 +44,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getPassword(),
                 authorities);
     }
+
+    // @Override annotation is just a safety feature that makes sure you're actually overriding something (not creating a new method by accident)
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -95,6 +98,7 @@ public class UserDetailsImpl implements UserDetails {
     public boolean equals(Object o) {
         if (this == o)
             return true;
+            // non primitve are class type so we use getClass() to compare the classes
         if (o == null || getClass() != o.getClass())
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
