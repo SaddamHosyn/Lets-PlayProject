@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import com.example.user_product_api.dto.UserRegistrationRequest;
 import com.example.user_product_api.dto.UserResponse;
 import com.example.user_product_api.service.UserService;
+import com.example.user_product_api.entity.Product;
+import com.example.user_product_api.service.ProductService;
+
 
 import jakarta.validation.Valid;
 
@@ -27,7 +30,11 @@ public class UserController {
    @Autowired
    private UserService userService;
 
-   @GetMapping
+
+    @Autowired
+    private ProductService productService;
+
+    @GetMapping
    @PreAuthorize("hasRole('ADMIN')")
    public ResponseEntity<List<UserResponse>> getAllUsers() {
       List<UserResponse> users = userService.getAllUsers();
@@ -62,12 +69,11 @@ public class UserController {
       return ResponseEntity.ok(response);
    }
 
-   @GetMapping("/{id}/products")
-   @PreAuthorize("hasRole('ADMIN') or @userService.isCurrentUser(#id, authentication.name)")
-   public ResponseEntity<?> getUserProducts(@PathVariable String id) {
-      // This will be implemented when we create ProductService method
-      Map<String, String> response = new HashMap<>();
-      response.put("message", "Get user products - to be implemented with ProductController");
-      return ResponseEntity.ok(response);
-   }
+    @GetMapping("/{id}/products")
+    @PreAuthorize("hasRole('ADMIN') or @userService.isCurrentUser(#id, authentication.name)")
+    public ResponseEntity<List<Product>> getUserProducts(@PathVariable String id) {
+        List<Product> products = productService.getProductsByUserId(id);
+        return ResponseEntity.ok(products);
+    }
+
 }
