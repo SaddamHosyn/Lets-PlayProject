@@ -147,7 +147,7 @@ src/main/java/com/example/user_product_api/
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/SaddamHosyn/Lets-PlayProject.git>
    cd user-product-api
    ```
 
